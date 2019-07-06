@@ -1,19 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using Microsoft.MixedReality.Toolkit.Core.Definitions.SpatialAwarenessSystem;
-using Microsoft.MixedReality.Toolkit.Core.Definitions.Utilities;
-using Microsoft.MixedReality.Toolkit.Core.Interfaces.Events;
-using Microsoft.MixedReality.Toolkit.Core.Interfaces.SpatialAwarenessSystem.Observers;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.SpatialAwarenessSystem
+namespace Microsoft.MixedReality.Toolkit.SpatialAwareness
 {
     public interface IMixedRealitySpatialAwarenessSystem : IMixedRealityEventSystem
     {
         /// <summary>
-        /// Gets the parent object to which all spatial awareness <see cref="GameObject"/>s are to be parented.
+        /// Gets the parent object to which all spatial awareness <see href="https://docs.unity3d.com/ScriptReference/GameObject.html">GameObject</see>s are to be parented.
         /// </summary>
         GameObject SpatialAwarenessObjectParent { get; }
 
@@ -21,7 +18,7 @@ namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.SpatialAwarenessSystem
         /// Creates the a parent, that is a child if the Spatial Awareness System parent so that the scene hierarchy does not get overly cluttered.
         /// </summary>
         /// <returns>
-        /// The <see cref="GameObject"/> to which spatial awareness objects will be parented.
+        /// The <see href="https://docs.unity3d.com/ScriptReference/GameObject.html">GameObject</see> to which spatial awareness objects will be parented.
         /// </returns>
         /// <remarks>
         /// This method is to be called by implementations of the <see cref="IMixedRealitySpatialAwarenessObserver"/> interface, not by application code.
@@ -38,11 +35,17 @@ namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.SpatialAwarenessSystem
         uint GenerateNewSourceId();
 
         /// <summary>
+        /// Typed representation of the ConfigurationProfile property.
+        /// </summary>
+        MixedRealitySpatialAwarenessSystemProfile SpatialAwarenessSystemProfile { get; }
+
+        /// <summary>
         /// Gets the collection of registered <see cref="IMixedRealitySpatialAwarenessObserver"/> data providers.
         /// </summary>
         /// <returns>
         /// Read only copy of the list of registered observers.
         /// </returns>
+        [Obsolete("GetObservers will be removed in a future release. Check to see if the instance implements IMixedRealityDataProviderAccess and call GetDataProviders.")]
         IReadOnlyList<IMixedRealitySpatialAwarenessObserver> GetObservers();
 
         /// <summary>
@@ -52,6 +55,7 @@ namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.SpatialAwarenessSystem
         /// <returns>
         /// Readonly copy of the list of registered observers that implement the specified type.
         /// </returns>
+        [Obsolete("GetObservers<T> will be removed in a future release. Check to see if the instance implements IMixedRealityDataProviderAccess and call GetDataProviders<T>.")]
         IReadOnlyList<T> GetObservers<T>() where T : IMixedRealitySpatialAwarenessObserver;
 
         /// <summary>
@@ -64,6 +68,7 @@ namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.SpatialAwarenessSystem
         /// <remarks>
         /// If more than one observer is registered under the specified name, the first will be returned.
         /// </remarks>
+        [Obsolete("GetObserver will be removed in a future release. Check to see if the instance implements IMixedRealityDataProviderAccess and call GetDataProvider.")]
         IMixedRealitySpatialAwarenessObserver GetObserver(string name);
 
         /// <summary>
@@ -77,7 +82,8 @@ namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.SpatialAwarenessSystem
         /// <remarks>
         /// If more than one observer is registered under the specified name, the first will be returned.
         /// </remarks>
-        T GetObserver<T>(string name) where T : IMixedRealitySpatialAwarenessObserver;
+        [Obsolete("GetObserver<T> will be removed in a future release. Check to see if the instance implements IMixedRealityDataProviderAccess and call GetDataProvider<T>.")]
+        T GetObserver<T>(string name = null) where T : IMixedRealitySpatialAwarenessObserver;
 
         /// <summary>
         /// Starts / restarts all spatial observers of the specified type.
@@ -117,35 +123,34 @@ namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.SpatialAwarenessSystem
         // TODO: make these (and future plane) events more generic
 
         /// <summary>
-        /// The spatial awareness system will call the <see cref="IMixedRealitySpatialAwarenessMeshHandler.OnMeshAdded"/> method to indicate a mesh has been added.
+        /// <see cref="IMixedRealitySpatialAwarenessMeshObserver"/>'s should call this method to indicate a mesh has been added.
         /// </summary>
         /// <param name="observer">The observer raising the event.</param>
         /// <param name="meshId">Value identifying the mesh.</param>
-        /// <param name="meshObject">The mesh <see cref="GameObject"/>.</param>
+        /// <param name="meshObject">The mesh <see href="https://docs.unity3d.com/ScriptReference/GameObject.html">GameObject</see>.</param>
         /// <remarks>
-        /// This method is to be called by implementations of the <see cref="IMixedRealitySpatialObserver"/> interface, not by application code.
+        /// This method is to be called by implementations of the <see cref="IMixedRealitySpatialAwarenessObserver"/> interface, not by application code.
         /// </remarks>
         void RaiseMeshAdded(IMixedRealitySpatialAwarenessObserver observer, int meshId, SpatialAwarenessMeshObject meshObject);
 
         /// <summary>
-        /// The spatial awareness system will call the <see cref="IMixedRealitySpatialAwarenessMeshHandler.OnMeshUpdated"/> method to indicate an existing mesh has been updated.
+        /// <see cref="IMixedRealitySpatialAwarenessMeshObserver"/>'s should call this method to indicate an existing mesh has been updated.
         /// </summary>
         /// <param name="observer">The observer raising the event.</param>
         /// <param name="meshId">Value identifying the mesh.</param>
-        /// <param name="meshObject">The mesh <see cref="GameObject"/>.</param>
+        /// <param name="meshObject">The mesh <see href="https://docs.unity3d.com/ScriptReference/GameObject.html">GameObject</see>.</param>
         /// <remarks>
-        /// This method is to be called by implementations of the <see cref="IMixedRealitySpatialObserver"/> interface, not by application code.
+        /// This method is to be called by implementations of the <see cref="IMixedRealitySpatialAwarenessObserver"/> interface, not by application code.
         /// </remarks>
         void RaiseMeshUpdated(IMixedRealitySpatialAwarenessObserver observer, int meshId, SpatialAwarenessMeshObject meshObject);
-//        void RaiseObservedObjectUpdated<T>(IMixedRealitySpatialAwarenessObserver observer, int meshId, T observedObject);
 
         /// <summary>
-        /// The spatial awareness system will call the <see cref="IMixedRealitySpatialAwarenessMeshHandler.OnMeshRemoved"/> method to indicate an existing mesh has been removed.
+        /// <see cref="IMixedRealitySpatialAwarenessMeshObserver"/>'s should call this method to indicate an existing mesh has been removed.
         /// </summary>
         /// <param name="observer">The observer raising the event.</param>
         /// <param name="meshId">Value identifying the mesh.</param>
         /// <remarks>
-        /// This method is to be called by implementations of the <see cref="IMixedRealitySpatialObserver"/> interface, not by application code.
+        /// This method is to be called by implementations of the <see cref="IMixedRealitySpatialAwarenessObserver"/> interface, not by application code.
         /// </remarks>
         void RaiseMeshRemoved(IMixedRealitySpatialAwarenessObserver observer, int meshId);
     }

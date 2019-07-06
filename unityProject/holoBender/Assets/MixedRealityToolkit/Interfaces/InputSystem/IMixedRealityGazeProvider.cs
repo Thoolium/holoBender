@@ -3,7 +3,7 @@
 
 using UnityEngine;
 
-namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.InputSystem
+namespace Microsoft.MixedReality.Toolkit.Input
 {
     /// <summary>
     /// Implements the Gaze Provider for an Input Source.
@@ -11,7 +11,7 @@ namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.InputSystem
     public interface IMixedRealityGazeProvider
     {
         /// <summary>
-        /// Enable or disable the <see cref="Component"/> attached to the <see cref="GameObjectReference"/>
+        /// Enable or disable the <see href="https://docs.unity3d.com/ScriptReference/Component.html">Component</see> attached to the <see cref="GameObjectReference"/>
         /// </summary>
         bool Enabled { get; set; }
 
@@ -24,6 +24,11 @@ namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.InputSystem
         /// The Gaze Pointer for the provider.
         /// </summary>
         IMixedRealityPointer GazePointer { get; }
+
+        /// <summary>
+        /// The prefab to be instantiated as the gaze cursor.
+        /// </summary>
+        GameObject GazeCursorPrefab { set; }
 
         /// <summary>
         /// The Gaze Cursor for the provider.

@@ -1,18 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using Microsoft.MixedReality.Toolkit.Core.Attributes;
-using Microsoft.MixedReality.Toolkit.Core.Definitions.Devices;
-using Microsoft.MixedReality.Toolkit.Core.Definitions.InputSystem;
-using Microsoft.MixedReality.Toolkit.Core.Definitions.Utilities;
-using Microsoft.MixedReality.Toolkit.Core.Interfaces.InputSystem;
-using Microsoft.MixedReality.Toolkit.Core.Providers.UnityInput;
-using Microsoft.MixedReality.Toolkit.Core.Services;
+using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.Input.UnityInput;
+using Microsoft.MixedReality.Toolkit.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-namespace Microsoft.MixedReality.Toolkit.Providers.OpenVR
+namespace Microsoft.MixedReality.Toolkit.OpenVR.Input
 {
     [MixedRealityController(
         SupportedControllerType.GenericOpenVR,
@@ -188,6 +184,9 @@ namespace Microsoft.MixedReality.Toolkit.Providers.OpenVR
 
                 // Devices are considered tracked if we receive position OR rotation data from the sensors.
                 TrackingState = (IsPositionAvailable || IsRotationAvailable) ? TrackingState.Tracked : TrackingState.NotTracked;
+
+                CurrentControllerPosition = MixedRealityPlayspace.TransformPoint(CurrentControllerPosition);
+                CurrentControllerRotation = MixedRealityPlayspace.Rotation * CurrentControllerRotation;
             }
             else
             {
@@ -201,22 +200,22 @@ namespace Microsoft.MixedReality.Toolkit.Providers.OpenVR
             // Raise input system events if it is enabled.
             if (lastState != TrackingState)
             {
-                MixedRealityToolkit.InputSystem?.RaiseSourceTrackingStateChanged(InputSource, this, TrackingState);
+                InputSystem?.RaiseSourceTrackingStateChanged(InputSource, this, TrackingState);
             }
 
             if (TrackingState == TrackingState.Tracked && LastControllerPose != CurrentControllerPose)
             {
                 if (IsPositionAvailable && IsRotationAvailable)
                 {
-                    MixedRealityToolkit.InputSystem?.RaiseSourcePoseChanged(InputSource, this, CurrentControllerPose);
+                    InputSystem?.RaiseSourcePoseChanged(InputSource, this, CurrentControllerPose);
                 }
                 else if (IsPositionAvailable && !IsRotationAvailable)
                 {
-                    MixedRealityToolkit.InputSystem?.RaiseSourcePositionChanged(InputSource, this, CurrentControllerPosition);
+                    InputSystem?.RaiseSourcePositionChanged(InputSource, this, CurrentControllerPosition);
                 }
                 else if (!IsPositionAvailable && IsRotationAvailable)
                 {
-                    MixedRealityToolkit.InputSystem?.RaiseSourceRotationChanged(InputSource, this, CurrentControllerRotation);
+                    InputSystem?.RaiseSourceRotationChanged(InputSource, this, CurrentControllerRotation);
                 }
             }
         }

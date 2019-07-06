@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.MixedReality.Toolkit.Core.Definitions.Utilities
+namespace Microsoft.MixedReality.Toolkit.Utilities
 {
     /// <summary>
     /// The supported platforms for Mixed Reality Toolkit Components and Features.
@@ -16,5 +16,6 @@ namespace Microsoft.MixedReality.Toolkit.Core.Definitions.Utilities
         LinuxStandalone = 1 << 2,
         WindowsUniversal = 1 << 3,
         WindowsEditor = 1 << 4,
+        Android = 1 << 5
     }
 }

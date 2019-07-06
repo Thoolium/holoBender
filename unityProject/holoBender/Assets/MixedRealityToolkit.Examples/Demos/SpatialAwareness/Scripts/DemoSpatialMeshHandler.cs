@@ -1,22 +1,32 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using Microsoft.MixedReality.Toolkit.Core.Definitions.SpatialAwarenessSystem;
-using Microsoft.MixedReality.Toolkit.Core.EventDatum.SpatialAwarenessSystem;
-using Microsoft.MixedReality.Toolkit.Core.Interfaces.SpatialAwarenessSystem.Handlers;
-using Microsoft.MixedReality.Toolkit.Core.Services;
-using Microsoft.MixedReality.Toolkit.Core.Utilities.Async;
+using Microsoft.MixedReality.Toolkit.SpatialAwareness;
+using Microsoft.MixedReality.Toolkit.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Microsoft.MixedReality.Toolkit.Examples.Demos
 {
     /// <summary>
-    /// This class is an example of the <see cref="IMixedRealitySpatialAwarenessMeshHandler"/> interface. It keeps track
+    /// This class is an example of the <see cref="SpatialAwareness.IMixedRealitySpatialAwarenessObservationHandler{T}"/> interface. It keeps track
     /// of the IDs of each mesh and tracks the number of updates they have received.
     /// </summary>
     public class DemoSpatialMeshHandler : MonoBehaviour, IMixedRealitySpatialAwarenessObservationHandler<SpatialAwarenessMeshObject>
     {
+        private IMixedRealitySpatialAwarenessSystem spatialAwarenessSystem = null;
+
+        private IMixedRealitySpatialAwarenessSystem SpatialAwarenessSystem
+        {
+            get
+            {
+                if (spatialAwarenessSystem == null)
+                {
+                    MixedRealityServiceRegistry.TryGetService<IMixedRealitySpatialAwarenessSystem>(out spatialAwarenessSystem);
+                }
+                return spatialAwarenessSystem;
+            }
+        }
         /// <summary>
         /// Collection that tracks the IDs and count of updates for each active spatial awareness mesh.
         /// </summary>
@@ -24,13 +34,13 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos
 
         private async void OnEnable()
         {
-            await new WaitUntil(() => MixedRealityToolkit.SpatialAwarenessSystem != null);
-            MixedRealityToolkit.SpatialAwarenessSystem.Register(gameObject);
+            await new WaitUntil(() => SpatialAwarenessSystem != null);
+            SpatialAwarenessSystem.Register(gameObject);
         }
 
         private void OnDisable()
         {
-            MixedRealityToolkit.SpatialAwarenessSystem?.Unregister(gameObject);
+            SpatialAwarenessSystem?.Unregister(gameObject);
         }
 
         /// <inheritdoc />

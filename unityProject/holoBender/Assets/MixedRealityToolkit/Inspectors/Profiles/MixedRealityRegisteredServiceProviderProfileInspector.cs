@@ -1,15 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.﻿
 
-using Microsoft.MixedReality.Toolkit.Core.Attributes;
-using Microsoft.MixedReality.Toolkit.Core.Definitions;
-using Microsoft.MixedReality.Toolkit.Core.Definitions.Utilities;
-using Microsoft.MixedReality.Toolkit.Core.Inspectors.Utilities;
-using Microsoft.MixedReality.Toolkit.Core.Services;
+using Microsoft.MixedReality.Toolkit.Utilities.Editor;
+using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Microsoft.MixedReality.Toolkit.Core.Inspectors.Profiles
+namespace Microsoft.MixedReality.Toolkit.Editor
 {
     [CustomEditor(typeof(MixedRealityRegisteredServiceProvidersProfile))]
     public class MixedRealityRegisteredServiceProviderProfileInspector : BaseMixedRealityToolkitConfigurationProfileInspector
@@ -20,14 +17,12 @@ namespace Microsoft.MixedReality.Toolkit.Core.Inspectors.Profiles
 
         private static bool[] configFoldouts;
 
+        private const string ProfileTitle = "Registered Services Settings";
+        private const string ProfileDescription = "This profile defines any additional Services like systems, features, and managers to register with the Mixed Reality Toolkit.";
+
         protected override void OnEnable()
         {
             base.OnEnable();
-
-            if (!MixedRealityInspectorUtility.CheckMixedRealityConfigured(false))
-            {
-                return;
-            }
 
             configurations = serializedObject.FindProperty("configurations");
             configFoldouts = new bool[configurations.arraySize];
@@ -35,26 +30,24 @@ namespace Microsoft.MixedReality.Toolkit.Core.Inspectors.Profiles
 
         public override void OnInspectorGUI()
         {
-            RenderMixedRealityToolkitLogo();
-            if (!MixedRealityInspectorUtility.CheckMixedRealityConfigured())
+            RenderProfileHeader(ProfileTitle, ProfileDescription, target);
+
+            using (new GUIEnabledWrapper(!IsProfileLock((BaseMixedRealityProfile)target)))
             {
-                return;
+                serializedObject.Update();
+
+                RenderList(configurations);
+
+                serializedObject.ApplyModifiedProperties();
             }
+        }
 
-            if (GUILayout.Button("Back to Configuration Profile"))
-            {
-                Selection.activeObject = MixedRealityToolkit.Instance.ActiveProfile;
-            }
+        protected override bool IsProfileInActiveInstance()
+        {
+            var profile = target as BaseMixedRealityProfile;
 
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Registered Service Providers Profile", EditorStyles.boldLabel);
-            EditorGUILayout.HelpBox("This profile defines any additional Services like systems, features, and managers to register with the Mixed Reality Toolkit.", MessageType.Info);
-
-            CheckProfileLock(target);
-
-            serializedObject.Update();
-            RenderList(configurations);
-            serializedObject.ApplyModifiedProperties();
+            return MixedRealityToolkit.IsInitialized && profile != null &&
+                   MixedRealityToolkit.Instance.ActiveProfile.RegisteredServiceProvidersProfile == profile;
         }
 
         private void RenderList(SerializedProperty list)
@@ -125,7 +118,7 @@ namespace Microsoft.MixedReality.Toolkit.Core.Inspectors.Profiles
 
                 EditorGUILayout.EndHorizontal();
 
-                if (configFoldouts[i])
+                if (configFoldouts[i] || RenderAsSubProfile)
                 {
                     EditorGUI.indentLevel++;
 
@@ -152,7 +145,13 @@ namespace Microsoft.MixedReality.Toolkit.Core.Inspectors.Profiles
 
                     changed |= EditorGUI.EndChangeCheck();
 
-                    changed |= RenderProfile(configurationProfile);
+                    Type serviceType = null;
+                    if (configurationProfile.objectReferenceValue != null)
+                    {
+                        serviceType = (target as MixedRealityRegisteredServiceProvidersProfile).Configurations[i].ComponentType;
+                    }
+
+                    changed |= RenderProfile(configurationProfile, null, true, true, serviceType);
 
                     EditorGUI.indentLevel--;
 
@@ -166,7 +165,7 @@ namespace Microsoft.MixedReality.Toolkit.Core.Inspectors.Profiles
             GUILayout.EndVertical();
             GUILayout.EndVertical();
 
-            if (changed)
+            if (changed && MixedRealityToolkit.IsInitialized)
             {
                 EditorApplication.delayCall += () => MixedRealityToolkit.Instance.ResetConfiguration(MixedRealityToolkit.Instance.ActiveProfile);
             }

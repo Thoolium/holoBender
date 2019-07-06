@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using Microsoft.MixedReality.Toolkit.Core.Definitions.Utilities;
 using UnityEngine;
 
-namespace Microsoft.MixedReality.Toolkit.Core.Utilities
+namespace Microsoft.MixedReality.Toolkit.Utilities
 {
     public static class PlatformUtility
     {
@@ -37,6 +36,9 @@ namespace Microsoft.MixedReality.Toolkit.Core.Utilities
                 case RuntimePlatform.LinuxPlayer:
                 case RuntimePlatform.LinuxEditor:
                     supportedPlatforms |= SupportedPlatforms.LinuxStandalone;
+                    break;
+                case RuntimePlatform.Android:
+                    supportedPlatforms |= SupportedPlatforms.Android;
                     break;
             }
 
@@ -81,6 +83,9 @@ namespace Microsoft.MixedReality.Toolkit.Core.Utilities
                 case UnityEditor.BuildTarget.StandaloneLinux64:
                 case UnityEditor.BuildTarget.StandaloneLinuxUniversal:
                     supportedPlatforms |= SupportedPlatforms.LinuxStandalone;
+                    break;
+                case UnityEditor.BuildTarget.Android:
+                    supportedPlatforms |= SupportedPlatforms.Android;
                     break;
             }
 

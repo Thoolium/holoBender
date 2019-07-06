@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.Events
+namespace Microsoft.MixedReality.Toolkit
 {
     /// <summary>
     /// Interface used to implement an Event System that is compatible with the Mixed Reality Toolkit.
@@ -19,23 +19,23 @@ namespace Microsoft.MixedReality.Toolkit.Core.Interfaces.Events
 
         /// <summary>
         /// The main function for handling and forwarding all events to their intended recipients.
-        /// <para><remarks>See: https://docs.unity3d.com/Manual/MessagingSystem.html </remarks></para>
         /// </summary>
+        /// <remarks>See: https://docs.unity3d.com/Manual/MessagingSystem.html </remarks>
         /// <typeparam name="T">Event Handler Interface Type</typeparam>
         /// <param name="eventData">Event Data</param>
         /// <param name="eventHandler">Event Handler delegate</param>
         void HandleEvent<T>(BaseEventData eventData, ExecuteEvents.EventFunction<T> eventHandler) where T : IEventSystemHandler;
 
         /// <summary>
-        /// Registers a <see cref="GameObject"/> to listen for events from this Event System.
+        /// Registers a <see href="https://docs.unity3d.com/ScriptReference/GameObject.html">GameObject</see> to listen for events from this Event System.
         /// </summary>
-        /// <param name="listener"><see cref="GameObject"/> to add to <see cref="EventListeners"/>.</param>
+        /// <param name="listener"><see href="https://docs.unity3d.com/ScriptReference/GameObject.html">GameObject</see> to add to <see cref="EventListeners"/>.</param>
         void Register(GameObject listener);
 
         /// <summary>
-        /// Unregisters a <see cref="GameObject"/> from listening for events from this Event System.
+        /// Unregisters a <see href="https://docs.unity3d.com/ScriptReference/GameObject.html">GameObject</see> from listening for events from this Event System.
         /// </summary>
-        /// <param name="listener"><see cref="GameObject"/> to remove from <see cref="EventListeners"/>.</param>
+        /// <param name="listener"><see href="https://docs.unity3d.com/ScriptReference/GameObject.html">GameObject</see> to remove from <see cref="EventListeners"/>.</param>
         void Unregister(GameObject listener);
     }
 }
