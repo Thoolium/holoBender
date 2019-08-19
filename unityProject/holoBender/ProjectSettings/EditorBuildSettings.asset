@@ -26,10 +26,16 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/MixedRealityToolkit.Examples/Demos/EyeTracking/Scenes/EyeTrackingDemo-05-Visualizer.unity
     guid: 2d6c43a82f3a88c4dbdc3b5e99a68d8a
-  - enabled: 1
-    path: Assets/testing.unity
+  - enabled: 0
+    path: Assets/Scenes/testing.unity
     guid: f5e9931e4a276de4a8f44c9f7292ae86
-  - enabled: 1
-    path: Assets/testing2.unity
+  - enabled: 0
+    path: Assets/Scenes/testing2.unity
     guid: 8e651ab220e16794f8330ad01cddee57
+  - enabled: 1
+    path: Assets/Scenes/main.unity
+    guid: 8f0c27358c21e7e4dbce2e118c813460
+  - enabled: 1
+    path: Assets/Scenes/bendingStationA.unity
+    guid: 3a4fa190a7ea9254396ec98463ee9749
   m_configObjects: {}
