@@ -5,7 +5,7 @@ public class timerNextLayer : MonoBehaviour
 
     public int currentLayer = 8;
     public int timerCount = 0;
-    public int timeDelay = 200;
+    public int timeDelay = 400;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +36,7 @@ public class timerNextLayer : MonoBehaviour
             // set mask to show the base layers (1,4,8,16,32) and the chosen layer
             // note this is done as a bitwise calculation as the cullingMask value is a binary value
             //e.g. 0010 1101 0011 1001 0001
-            Camera.main.cullingMask = 1 + 4 + 8 + 16 + 32 | 1 << currentLayer;
+            Camera.current.cullingMask = 1 + 4 + 8 + 16 + 32 | 1 << currentLayer;
 
 
             // play music on positive reinforcement layer, mostly as proof of concept
