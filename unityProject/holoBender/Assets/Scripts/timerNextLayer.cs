@@ -55,7 +55,7 @@ public class timerNextLayer : MonoBehaviour
                 }
                 break;
             case 11:  // Hold Buttons
-                if (frameCount > (delayScale * 4))
+                if (frameCount > (delayScale * 7))
                 {
                     currentLayer++;
                     frameCount = 0;
@@ -63,7 +63,7 @@ public class timerNextLayer : MonoBehaviour
                 }
                 break;
             case 12:  // Release Buttons
-                if (frameCount > (delayScale * 4))
+                if (frameCount > (delayScale * 2))
                 {
                     currentLayer++;
                     frameCount = 0;
@@ -71,7 +71,7 @@ public class timerNextLayer : MonoBehaviour
                 }
                 break;
             case 13:  // Move Wires
-                if (frameCount > (delayScale * 4))
+                if (frameCount > (delayScale * 3))
                 {
                     currentLayer++;
                     frameCount = 0;
