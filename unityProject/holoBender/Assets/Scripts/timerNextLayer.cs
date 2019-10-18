@@ -4,50 +4,91 @@ public class timerNextLayer : MonoBehaviour
 {
 
     public int currentLayer = 8;
-    public int timerCount = 0;
-    public int timeDelay = 400;
+    public int delayScale = 70;
+    public int frameCount = 0;
+    
+    public AudioClip pickUpWires;
+    public AudioClip placeWires;
+    public AudioClip checkWires;
+    public AudioClip holdButtons;
+    public AudioClip releaseButtons;
+    public AudioClip removeWires;
+    public AudioClip positiveReinforcement;
+    AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
+        audioSource.PlayOneShot(pickUpWires);
     }
 
     // Update is called once per frame
     void Update()
     {
-        timerCount++;
-
-        if (timerCount > timeDelay)
+        frameCount++;
+        
+        switch (currentLayer)
         {
-            // Loop Back To Start if already on final layer
-            if (currentLayer == 14)
-            {
-                currentLayer = 8;
-                timerCount = 0;
-            }
-
-            // go to the next layer in not on final layer
-            else
-            {
-                currentLayer++;
-                timerCount = 0;
-            }
-
-            // set mask to show the base layers (1,4,8,16,32) and the chosen layer
-            // note this is done as a bitwise calculation as the cullingMask value is a binary value
-            //e.g. 0010 1101 0011 1001 0001
-            Camera.current.cullingMask = 1 + 4 + 8 + 16 + 32 | 1 << currentLayer;
-
-
-            // play music on positive reinforcement layer, mostly as proof of concept
-            // music should be activated from relevant triggers and not from this funciton
-            if (currentLayer == 14)
-            {
-                GetComponent<AudioSource>().Play();
-            }
+            case 8:  // Pick Up Wires
+                if (frameCount > (delayScale * 4))
+                {
+                    currentLayer++;
+                    frameCount = 0;
+                    audioSource.PlayOneShot(placeWires);
+                }
+                break;
+            case 9:  // Place Wires
+                if (frameCount > (delayScale * 4))
+                {
+                    currentLayer++;
+                    frameCount = 0;
+                    audioSource.PlayOneShot(checkWires);
+                }
+                break;
+            case 10:  // Check Wires
+                if (frameCount > (delayScale * 4))
+                {
+                    currentLayer++;
+                    frameCount = 0;
+                    audioSource.PlayOneShot(holdButtons);
+                }
+                break;
+            case 11:  // Hold Buttons
+                if (frameCount > (delayScale * 7))
+                {
+                    currentLayer++;
+                    frameCount = 0;
+                    audioSource.PlayOneShot(releaseButtons);
+                }
+                break;
+            case 12:  // Release Buttons
+                if (frameCount > (delayScale * 2))
+                {
+                    currentLayer++;
+                    frameCount = 0;
+                    audioSource.PlayOneShot(removeWires);
+                }
+                break;
+            case 13:  // Move Wires
+                if (frameCount > (delayScale * 3))
+                {
+                    currentLayer++;
+                    frameCount = 0;
+                    audioSource.PlayOneShot(positiveReinforcement);
+                }
+                break;
+            case 14:  // Positive Reinforcement
+                if (frameCount > (delayScale * 4))
+                {
+                    currentLayer = 8;
+                    frameCount = 0;
+                    audioSource.PlayOneShot(pickUpWires);
+                }
+                break;
         }
-        else { }
 
-
+        Camera.current.cullingMask = 1 + 4 + 8 + 16 + 32 | 1 << currentLayer;
+        
     }
 }
