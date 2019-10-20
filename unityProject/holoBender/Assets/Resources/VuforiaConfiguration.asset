@@ -22,11 +22,11 @@ MonoBehaviour:
     useDelayedLoadingObjectTargets: 0
     modelTargetRecoWhileExtendedTracked: 1
     version: 8.3.8
-    eulaAcceptedVersions: '{"Values":["0.0","8.0","8.1","8.3"]}'
+    eulaAcceptedVersions: '{"Values":["0.0","8.0","8.1","8.3","8.5"]}'
   digitalEyewear:
     cameraOffset: 0.06
     distortionRenderingLayer: 31
-    eyewearType: 1
+    eyewearType: 0
     stereoFramework: 0
     seeThroughConfiguration: 1
     viewerName: 
